@@ -54,7 +54,7 @@ This is why if you run [run3.sh](hello-runtime/run3.sh) you'll see:
 
 You may try to work around the issues by starting `hello-runtime` with more than one version of `hello-service` in your module path and let JPMS pick one. This is demonstrated by:
 
- - [run2.1.sh](hello-runtime/run2.1.sh) for the package name change. 
- - [run3.1.sh](hello-runtime/run3.1.sh) for the module name change. 
+ - [run2.1.sh](hello-runtime/run2.1.sh) for the package name change. However this approach is no different than what we had on the good old classpath. Furthermore it will not help you if you need another module using the new package, as you can't have 2 modules with the same name in the same runtime. 
+
+ - [run3.1.sh](hello-runtime/run3.1.sh) for the module name change. However this approach will not help you in the case when you need another module that requires the new version of `hello-service` module. Unlike OSGi, JPMS does not allow split packages _(same package names in more than one module)_.
  
- However this approach is no different than what we had on the good old classpath. Furthermore it will not help you in the case of another module using the new package, as JPMS does not allow 2 modules with the same name to be wired in the same runtime _(unless you have custom module layers)_.
