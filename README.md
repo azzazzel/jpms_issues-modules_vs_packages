@@ -19,14 +19,14 @@ All of them are Maven projects that can be build in a standard Maven way. Make s
 
 ## All works just fine initially
 
-The [run.sh](./run.sh) will start `hello-runtime` with `hello-service` on module path. As expected you'll see:
+The [run.sh](hello-runtime/run.sh) will start `hello-runtime` with `hello-service` on module path. As expected you'll see:
 
     JPMS was wired properly! Ready to rock!
     Hello JPMS
 
 ## Package name change
 
-Now assume the maintainer of `hello-service` has refactored the code and changed the package name. Later on you try to run `hello-runtime` with `hello-service-2`. With a module system in place you may expect it will warn you of the incompatibility _(that's what OSGi would do)_. However since JPMS handles dependencies between modules and not packages, it will resolve just fine and the actual error will pop up to you at runtime _(according to Murphy's law - at peak time in a place not covered by tests)_! To demonstrate that, run [run2.sh](./run2.sh) and you'll see:
+Now assume the maintainer of `hello-service` has refactored the code and changed the package name. Later on you try to run `hello-runtime` with `hello-service-2`. With a module system in place you may expect it will warn you of the incompatibility _(that's what OSGi would do)_. However since JPMS handles dependencies between modules and not packages, it will resolve just fine and the actual error will pop up to you at runtime _(according to Murphy's law - at peak time in a place not covered by tests)_! To demonstrate that, run [run2.sh](hello-runtime/run2.sh) and you'll see:
 
     JPMS was wired properly! Ready to rock!
     Exception in thread "main" java.lang.NoClassDefFoundError: test/jpms/mod/version/change/hello/service/HelloService
@@ -45,7 +45,7 @@ You may expect that to work just fine. After all _(in general but not per JPMS r
 
 However since JPMS handles dependencies between modules and not packages, the module names are glorified and hardcoded as dependencies inside `module-info.java` files that need to be compiled. 
 
-This is why if you run [run3.sh](./run3.sh) you'll see:
+This is why if you run [run3.sh](hello-runtime/run3.sh) you'll see:
 
     Error occurred during initialization of boot layer
     java.lang.module.FindException: Module test.jpms.mod.version.change.hello.service not found, required by test.jpms.mod.version.change.hello.runtime
@@ -54,7 +54,7 @@ This is why if you run [run3.sh](./run3.sh) you'll see:
 
 You may try to work around the issues by starting `hello-runtime` with more than one version of `hello-service` in your module path and let JPMS pick one. This is demonstrated by:
 
- - [run2.1.sh](./run2.1.sh) for the package name change. 
- - [run3.1.sh](./run3.1.sh) for the module name change. 
+ - [run2.1.sh](hello-runtime/run2.1.sh) for the package name change. 
+ - [run3.1.sh](hello-runtime/run3.1.sh) for the module name change. 
  
  However this approach is no different than what we had on the good old classpath. Furthermore it will not help you in the case of another module using the new package, as JPMS does not allow 2 modules with the same name to be wired in the same runtime _(unless you have custom module layers)_.
